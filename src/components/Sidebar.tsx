@@ -13,10 +13,18 @@ import {
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { motion, AnimatePresence } from 'motion/react';
+import { Key } from 'lucide-react';
 
-export const Sidebar: React.FC = () => {
+interface SidebarProps {
+  isOpen?: boolean;
+  onClose?: () => void;
+}
+
+export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const { currentView, setCurrentView, allGraphs, setActiveGraph, saveGraph, userProfile } = useApp();
   const [showQuickSwitch, setShowQuickSwitch] = React.useState(false);
+  const [apiKey, setApiKey] = React.useState(localStorage.getItem('gemini_api_key') || '');
+  const [showApiKeyInput, setShowApiKeyInput] = React.useState(false);
 
   const createNewGraph = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -45,7 +53,18 @@ export const Sidebar: React.FC = () => {
   ];
 
   return (
-    <nav className="hidden md:flex fixed left-0 top-0 h-full flex-col py-8 gap-4 bg-white w-72 rounded-r-[40px] border-r-2 border-pink-50 shadow-[10px_0_30px_rgba(224,64,160,0.1)] z-50">
+    <nav className={cn(
+      "fixed left-0 top-0 h-full flex flex-col py-8 gap-4 bg-white dark:bg-surface-container-low w-72 rounded-r-[40px] border-r-2 border-pink-50 dark:border-white/5 shadow-[10px_0_30px_rgba(224,64,160,0.1)] z-50 transition-transform duration-500 md:translate-x-0",
+      isOpen ? "translate-x-0" : "-translate-x-full"
+    )}>
+      {onClose && (
+        <button 
+          onClick={onClose}
+          className="md:hidden absolute top-4 -right-12 p-2 bg-white dark:bg-surface-container-low rounded-r-xl border-y-2 border-r-2 border-pink-50 dark:border-white/5 text-primary shadow-lg"
+        >
+          <Plus className="w-6 h-6 rotate-45" />
+        </button>
+      )}
       <div className="px-8 mb-6">
         <div className="flex items-center gap-2 mb-2">
           <Sparkles className="text-primary w-6 h-6" />
@@ -130,9 +149,53 @@ export const Sidebar: React.FC = () => {
         ))}
       </div>
 
-      <div className="px-6 mt-auto">
+      <div className="px-6 mt-auto space-y-4">
+        <div className="relative">
+          <button 
+            onClick={() => setShowApiKeyInput(!showApiKeyInput)}
+            className={cn(
+              "w-full flex items-center justify-center gap-3 py-3 rounded-full font-black text-[10px] uppercase tracking-widest transition-all",
+              apiKey ? "bg-secondary/10 text-secondary" : "bg-primary/10 text-primary"
+            )}
+          >
+            <Key className="w-4 h-4" /> {apiKey ? 'API KEY ACTIVE' : 'ENTER API KEY'}
+          </button>
+          
+          <AnimatePresence>
+            {showApiKeyInput && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 10 }}
+                className="absolute bottom-full left-0 right-0 mb-4 bg-white dark:bg-surface-container p-4 rounded-3xl shadow-2xl border border-pink-50 dark:border-white/10 space-y-4"
+              >
+                <div className="flex justify-between items-center">
+                  <p className="text-[10px] font-black uppercase text-outline tracking-widest leading-none">Neural API Key</p>
+                  <button onClick={() => setShowApiKeyInput(false)} className="text-outline hover:text-primary"><Plus className="w-4 h-4 rotate-45" /></button>
+                </div>
+                <input 
+                  type="password"
+                  placeholder="Paste GEMINI_API_KEY..."
+                  className="w-full bg-surface-container dark:bg-white/5 p-3 rounded-xl text-xs font-mono outline-none border border-outline-variant focus:border-primary transition-colors"
+                  value={apiKey}
+                  onChange={(e) => {
+                    setApiKey(e.target.value);
+                    localStorage.setItem('gemini_api_key', e.target.value);
+                  }}
+                />
+                <p className="text-[8px] text-outline leading-tight font-medium">
+                  Locally persistence only. Used for autonomous engram synthesis and neural path expansion.
+                </p>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
         <button 
-          onClick={() => setCurrentView('settings')}
+          onClick={() => {
+            setCurrentView('settings');
+            onClose?.();
+          }}
           className="w-full bg-primary-container text-on-primary-container font-bold py-4 rounded-full shadow-md hover:scale-[1.02] active:scale-95 transition-all bento-glow"
         >
           Synthesize Archive

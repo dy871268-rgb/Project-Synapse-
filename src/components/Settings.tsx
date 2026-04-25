@@ -191,13 +191,13 @@ export const Settings: React.FC = () => {
                 Data is indexed within your localized browser engram. Clearing the state will irreversibly sever all synaptic links.
               </p>
             </div>
-            <div className="w-full sm:w-auto bg-surface-container dark:bg-surface-container-high p-4 md:p-6 rounded-2xl md:rounded-3xl text-center min-w-[120px]">
+            <div className="hidden md:block w-full sm:w-auto bg-surface-container dark:bg-surface-container-high p-4 md:p-6 rounded-2xl md:rounded-3xl text-center min-w-[120px]">
                <p className="text-[8px] md:text-[10px] font-black uppercase text-outline dark:text-white/40 tracking-widest mb-1">Total Engrams</p>
                <p className="text-3xl md:text-4xl font-black text-primary">{allGraphs.length}</p>
             </div>
           </div>
 
-          <div className="flex gap-4">
+          <div className="hidden md:flex gap-4">
              <button 
                 onClick={handleClearState}
                 className="flex-1 flex items-center justify-center gap-3 py-6 rounded-[2.5rem] bg-red-50 dark:bg-red-950/20 text-red-500 font-black hover:bg-red-500 hover:text-white transition-all bouncy"

@@ -124,7 +124,7 @@ export const Dashboard: React.FC = () => {
           </motion.div>
         </div>
 
-        <div className="hidden md:flex absolute bottom-8 md:bottom-16 left-8 md:left-16 right-8 md:right-16 z-10 flex justify-between items-end">
+        <div className="hidden md:flex absolute bottom-8 md:bottom-16 left-8 md:left-16 right-8 md:right-16 z-10 justify-between items-end">
           <motion.div 
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 0.6, x: 0 }}
@@ -132,7 +132,7 @@ export const Dashboard: React.FC = () => {
             className="space-y-0.5 md:space-y-2"
           >
             <p className="text-[7px] md:text-[10px] font-black text-white uppercase tracking-widest">Active Engrams</p>
-            <p className="text-xl md:text-4xl font-black text-white">{allGraphs.reduce((acc, g) => acc + g.nodes.length, 0)} Nodes</p>
+            <p className="text-xl md:text-4xl font-black text-white">{allGraphs.length} Clusters</p>
           </motion.div>
           <motion.div 
             initial={{ opacity: 0, x: 20 }}

@@ -24,6 +24,7 @@ import { cn } from './lib/utils';
 
 export default function App() {
   const { currentView, setCurrentView, createNewNode } = useApp();
+  const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
 
   const renderContent = () => {
     switch (currentView) {
@@ -51,14 +52,14 @@ export default function App() {
   return (
     <div className="min-h-screen bg-background text-on-background flex flex-col md:flex-row">
       {/* Mobile Header */}
-      <header className="md:hidden flex justify-between items-center w-full px-6 py-4 bg-white/80 backdrop-blur-md border-b-2 border-pink-100 z-50 sticky top-0">
+      <header className="md:hidden flex justify-between items-center w-full px-6 py-4 bg-white/80 dark:bg-black/80 backdrop-blur-md border-b-2 border-pink-100 dark:border-white/10 z-50 sticky top-0">
         <h1 className="text-2xl font-black text-primary italic font-headline tracking-tighter">Synapse</h1>
-        <button onClick={() => {}} className="p-2 hover:bg-pink-50 rounded-full text-primary">
+        <button onClick={() => setIsSidebarOpen(true)} className="p-2 hover:bg-pink-50 dark:hover:bg-white/5 rounded-full text-primary">
           <Menu className="w-6 h-6" />
         </button>
       </header>
 
-      <Sidebar />
+      <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 
       {/* Main Container */}
       <main className={cn(
